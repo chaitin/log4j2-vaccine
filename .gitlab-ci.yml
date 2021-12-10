@@ -38,5 +38,5 @@ build-job:
     - /usr/local/bin/mvn-entrypoint.sh mvn clean --fail-never
     - /usr/local/bin/mvn-entrypoint.sh mvn clean package
     - mkdir -p target
-    - cp agent/target/agent.jar loader/target/loader.jar target/
+    - cp README.md agent/target/agent.jar loader/target/loader.jar target/
     - echo "Build Successfully"
