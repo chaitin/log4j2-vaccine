@@ -11,6 +11,7 @@ import java.security.ProtectionDomain;
 public class JndiManagerTransformer implements ClassFileTransformer {
     private Instrumentation inst;
     private static String JndiManagerClassName = "org.apache.logging.log4j.core.net.JndiManager";
+
     private static String JndiManagerLookupMethodName = "lookup";
 
     public JndiManagerTransformer(Instrumentation inst){
@@ -19,7 +20,8 @@ public class JndiManagerTransformer implements ClassFileTransformer {
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        if(className.equals(JndiManagerClassName)){
+        if(className.replace("/",".").equals(JndiManagerClassName)){
+            System.out.println("[Vaccine] Start Patch JndiManager Lookup Method!");
             CtClass ctClass = null;
             CtMethod ctMethod = null;
             try{
@@ -46,6 +48,7 @@ public class JndiManagerTransformer implements ClassFileTransformer {
                 ctMethod.insertBefore("if(name.startsWith(\"ldap://\") || name.startsWith(\"rmi://\")){return null;}");
 
                 // 返回字节码
+                System.out.println("[Vaccine] Patch JndiManager Lookup Success!");
                 return ctClass.toBytecode();
             }catch (Exception e){
                 e.printStackTrace();
@@ -64,8 +67,9 @@ public class JndiManagerTransformer implements ClassFileTransformer {
     public void retransform() {
         Class<?>[] loadedClasses = inst.getAllLoadedClasses();
         for (Class<?> clazz : loadedClasses) {
-            if (clazz.getName().equals(JndiManagerClassName)) {
-                    try {
+            if (clazz.getName().replace("/", ".").equals(JndiManagerClassName)) {
+                System.out.println("[Vaccine] Find Loaded JndiManager Lookup Method!");
+                try {
                         inst.retransformClasses(clazz);
                     } catch (Throwable t) {
                         System.out.println("failed to retransform class " + clazz.getName() + ": " + t.getMessage());

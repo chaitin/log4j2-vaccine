@@ -29,8 +29,9 @@ public class Agent {
      */
     public static void premain(String agentArg, Instrumentation inst) {
         try {
+            System.out.println("[Vaccine] Premain Agent");
             JndiManagerTransformer jndiManagerTransformer = new JndiManagerTransformer(inst);
-            inst.addTransformer(jndiManagerTransformer);
+            inst.addTransformer(jndiManagerTransformer, true);
             jndiManagerTransformer.retransform();
         }catch (Throwable e){
             e.printStackTrace();
@@ -45,11 +46,12 @@ public class Agent {
      */
     public static void agentmain(String agentArg, Instrumentation inst) {
         try {
+            System.out.println("[Vaccine] Attach Agent");
             JndiManagerTransformer jndiManagerTransformer = new JndiManagerTransformer(inst);
-            inst.addTransformer(jndiManagerTransformer);
+            inst.addTransformer(jndiManagerTransformer, true);
             jndiManagerTransformer.retransform();
         }catch (Throwable e){
-            System.err.println("[Vaccine] Error "+ e.getMessage());
+            System.out.println("[Vaccine] Error "+ e.getMessage());
             e.printStackTrace();
         }
     }

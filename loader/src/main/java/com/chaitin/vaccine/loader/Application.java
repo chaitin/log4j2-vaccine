@@ -25,14 +25,14 @@ public class Application {
     protected String formatArg() throws UnsupportedEncodingException {
         String enc = "UTF-16";
         try {
-            return String.format("%d:%s:%s:%s",
+            return String.format("%d:%s:%s",
                     this.pid,
                     URLEncoder.encode(this.agent, enc),
                     URLEncoder.encode(this.action, enc)
             );
         } catch (UnsupportedEncodingException e) {
             enc = "UTF-8";
-            return String.format("%d:%s:%s:%s",
+            return String.format("%d:%s:%s",
                     this.pid,
                     URLEncoder.encode(this.agent, enc),
                     URLEncoder.encode(this.action, enc)
@@ -49,17 +49,6 @@ public class Application {
         //TODO jdk version > 9 will throw java.util.ServiceConfigurationError:
         try {
             virtualMachine = VirtualMachine.attach(pid);
-
-            Properties targetSystemProperties = virtualMachine.getSystemProperties();
-            String targetJavaVersion = JavaVersionUtils.javaVersionStr(targetSystemProperties);
-            String currentJavaVersion = JavaVersionUtils.javaVersionStr();
-            if (targetJavaVersion != null && currentJavaVersion != null) {
-                if (!targetJavaVersion.equals(currentJavaVersion)) {
-                    LogUtils.warn("Current VM java version: {} do not match target VM java version: {}, attach may fail.", currentJavaVersion, targetJavaVersion);
-                    LogUtils.warn("Target VM JAVA_HOME is {}, copagent JAVA_HOME is {}, try to set the same JAVA_HOME.", targetSystemProperties.getProperty("java.home"), System.getProperty("java.home"));
-                }
-            }
-
             Thread.sleep(1000);
             if (virtualMachine != null) {
                 String arg = formatArg();
@@ -74,7 +63,7 @@ public class Application {
         } finally {
             if (virtualMachine != null) {
                 virtualMachine.detach();
-                System.err.println("[Vaccine] Agent is unloaded");
+                System.err.println("[Vaccine] Agent Patch Finished");
             }
         }
 
