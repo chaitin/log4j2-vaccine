@@ -2,7 +2,7 @@
 一款用于`log4j2`漏洞的疫苗，基于`Instrumentation`机制进行RASP防护，Patch了
 `org.apache.logging.log4j.core.net.JndiManager`的`lookup`方法，部分代码借用了`arthas`的实现
 
-## Usage
+## Usage1: Java进程已经启动
 启动Loader
 ```
 java -jar loader.jar --agent agent.jar
@@ -17,3 +17,9 @@ java -jar loader.jar --agent agent.jar
 
 Patch成功
 ![](https://dinfinite.oss-cn-beijing.aliyuncs.com/image/20211210162759.png)
+
+## Usage2: Java进程仍未启动
+使用`javaagent`参数加载`agent.jar`
+```
+java -javaagent:agent.jar -jar web.jar
+```
