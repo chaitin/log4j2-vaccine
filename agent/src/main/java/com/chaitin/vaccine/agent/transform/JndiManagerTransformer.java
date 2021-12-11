@@ -45,7 +45,8 @@ public class JndiManagerTransformer implements ClassFileTransformer {
 
                 // 修改lookup方法
                 assert ctMethod != null;
-                ctMethod.insertBefore("if(name.startsWith(\"ldap://\") || name.startsWith(\"rmi://\")){return null;}");
+                //ctMethod.insertBefore("if(name.startsWith(\"ldap://\") || name.startsWith(\"rmi://\")){return null;}");
+                ctMethod.insertBefore("return null;");
 
                 // 返回字节码
                 System.out.println("[Vaccine] Patch JndiManager Lookup Success!");
