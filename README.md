@@ -18,6 +18,10 @@ java -jar loader.jar --agent agent.jar
 Patch成功
 ![](https://dinfinite.oss-cn-beijing.aliyuncs.com/image/20211210162759.png)
 
+如果Java进程较多，可在启动时添加`all`参数，Patch所有存活的Java进程
+```
+java -jar loader.jar --agent agent.jar all
+```
 ## Usage2: Java进程仍未启动
 使用`javaagent`参数加载`agent.jar`
 ```
