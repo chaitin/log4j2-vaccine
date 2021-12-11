@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 
 public class Command {
     protected PrintWriter ps;
@@ -60,6 +61,7 @@ public class Command {
             String action = cmd.hasOption("uninstall") ? "uninstall":"install";
 
             long pid = -1;
+            boolean injectAll = false;
 
             if (arguments.size() != 1) {
                 // select jvm process pid
@@ -72,11 +74,24 @@ public class Command {
                     throw new UsageException("Please select an available pid.");
                 }
             }else{
-                pid = Integer.parseInt(arguments.get(0));
+                // "all" means inject all porcess
+                if(arguments.get(0).equals("all")){
+                    injectAll = true;
+                }else{
+                    pid = Integer.parseInt(arguments.get(0));
+                }
             }
 
-            Application app = new Application(pid, agent.getAbsolutePath(),action);
-            app.load();
+            if(injectAll){
+                Map<Long, String> processMap = ProcessUtils.listProcessByJps(false);
+                for(Long processPid : processMap.keySet()){
+                    Application application = new Application(processPid, agent.getAbsolutePath(), action);
+                    application.load();
+                }
+            }else{
+                Application app = new Application(pid, agent.getAbsolutePath(),action);
+                app.load();
+            }
         } catch (IOException e) {
             LogUtils.error("Error: attach io error, " + e.getMessage());
         }

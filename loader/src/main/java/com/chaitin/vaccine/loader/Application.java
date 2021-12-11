@@ -48,6 +48,7 @@ public class Application {
 
         //TODO jdk version > 9 will throw java.util.ServiceConfigurationError:
         try {
+            System.out.println("[Vaccine] Agent Patch Pid: " + pid + " Start");
             virtualMachine = VirtualMachine.attach(pid);
             Thread.sleep(1000);
             if (virtualMachine != null) {
@@ -63,7 +64,7 @@ public class Application {
         } finally {
             if (virtualMachine != null) {
                 virtualMachine.detach();
-                System.err.println("[Vaccine] Agent Patch Finished");
+                System.out.println("[Vaccine] Agent Patch Finished");
             }
         }
 

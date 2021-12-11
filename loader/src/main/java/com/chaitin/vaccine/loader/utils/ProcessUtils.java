@@ -83,7 +83,7 @@ public class ProcessUtils {
         return -1;
     }
 
-    private static Map<Long, String> listProcessByJps(boolean v) {
+    public static Map<Long, String> listProcessByJps(boolean v) {
         Map<Long, String> result = new LinkedHashMap<Long, String>();
 
         String jps = "jps";
